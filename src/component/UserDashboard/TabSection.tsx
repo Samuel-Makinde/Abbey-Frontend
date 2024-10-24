@@ -19,7 +19,7 @@ const TabsSection: React.FC<TabsSectionProps> = ({ following, followers, followe
   const [followedUsers, setFollowedUsers] = useState<number[]>(following.map(person => person.id)); 
   const [loading, setLoading] = useState<number | null>(null); 
 
-  const tabs = ['Following', 'Followers'];
+  // const tabs = ['Following', 'Followers'];
 
   // Function to handle following a user
   const handleFollow = async (followingId: number) => {
@@ -51,6 +51,10 @@ const TabsSection: React.FC<TabsSectionProps> = ({ following, followers, followe
     }
   };
 
+  type Tab = "Following" | "Followers";
+
+const tabs: Tab[] = ["Following", "Followers"];
+
   return (
     <div className="p-4 font-body">
       {/* Tab navigation */}
@@ -61,7 +65,7 @@ const TabsSection: React.FC<TabsSectionProps> = ({ following, followers, followe
             className={`text-sec3 hover:text-primary2 ${
               activeTab === tab ? 'text-primary2 font-bold border-b-2 border-primary3' : ''
             }`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => setActiveTab(tab as Tab)}
           >
             {tab}
           </button>

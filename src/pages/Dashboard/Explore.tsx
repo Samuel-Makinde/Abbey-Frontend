@@ -1,29 +1,44 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import SearchByLocation from "../../component/UserDashboard/SearchUsers";
-import UserSection from "../../component/UserDashboard/UserSection";
+ import UserSection from "../../component/UserDashboard/UserSection";
 import Layout from "../../Layout/Layout";
 import api from "../../api/dashboardApi"
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { RootState } from "../../store";
-import { AuthTokens } from '../../type/authTypes';
+// import { AuthTokens } from '../../type/authTypes';
 import { useNavigate } from "react-router-dom";
 
-interface User {
+interface UserFocus {
   id: number; 
   name: string;
   fullname: string;
   username: string;
   email: string;
-  bio: string;
+  bio: string ;
   country: string;
   state: string;
   createdAt: string
 }
 
+interface UserExplore {
+  userId: number; 
+  fullName: string;
+  email: string;
+  username: string;
+  country: string;
+  state: string;
+  bio?: string | undefined; // Allow bio to be undefined
+  createdAt?: string | undefined;
+}
+
+interface AuthTokensFile {
+  accessToken: string | null;
+  refreshToken: string | null;
+  user: UserExplore | null;  // Allow user to be null
+}
+
 const Explore = () => {
 
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserFocus[]>([]);
  
  const navigate = useNavigate()
 
@@ -37,7 +52,7 @@ const Explore = () => {
 
 
   // Create the AuthTokens object only if the user is available
-  const auth: AuthTokens = {
+  const auth:AuthTokensFile = {
     accessToken: authState.accessToken,
     refreshToken: authState.refreshToken,
     user: authState.user, 

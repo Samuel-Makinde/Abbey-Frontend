@@ -4,7 +4,7 @@ import api from "../../api/dashboardApi";
 import { showToast } from '../showToast';
 
 // Define the User interface
-interface User {
+interface UserNew {
   id: number ; 
   fullname: string;
   username: string;
@@ -12,13 +12,13 @@ interface User {
 
 // Define the WhoToFollowProps interface
 interface WhoToFollowProps {
-  users: User[];
+  userss: UserNew[];
   followerId: number | null; 
   accessToken: string | null; 
   refreshToken: string | null; 
 }
 
-const WhoToFollow: React.FC<WhoToFollowProps> = ({ users, followerId, accessToken, refreshToken }) => {
+const WhoToFollow: React.FC<WhoToFollowProps> = ({ userss, followerId, accessToken, refreshToken }) => {
   const [followedUsers, setFollowedUsers] = useState<number[]>([]); 
   const [loading, setLoading] = useState<number | null>(null); 
 
@@ -41,7 +41,7 @@ const WhoToFollow: React.FC<WhoToFollowProps> = ({ users, followerId, accessToke
       <div>
         <Heading level={2} className="text-lg font-bold mb-4">People near you</Heading>
 
-        {users.slice(0, 3).map((user) => (
+        {userss.slice(0, 3).map((user) => (
           <div key={user.id} className="flex bg-sec1 p-3 rounded-md justify-between items-center mb-4">
             <div>
               <Heading level={4} className="font-normal text-base text-primary2">{user.fullname}</Heading>
@@ -59,7 +59,7 @@ const WhoToFollow: React.FC<WhoToFollowProps> = ({ users, followerId, accessToke
           </div>
         ))}
 
-        {users.length > 3 && (
+        {userss.length > 3 && (
           <div className="mt-4 text-sec1 hover:underline cursor-pointer">
             <Text className="text-primary2">Show More</Text>
           </div>

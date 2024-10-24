@@ -13,7 +13,7 @@ import { AuthTokens } from '../../type/authTypes';
 import { useNavigate } from "react-router-dom";
 import { User } from '../../type/authTypes';
 
-interface UserFollow { id: number; fullName: string; username: string; bio: string; createdAt: string }
+interface UserFollow { id: number; fullName: string; username: string; bio: string; createdAt: string  }
 const DashboardLayout: React.FC = () => {
 
    const [follow, setfollowers] = useState<UserFollow[]>([]);
@@ -35,7 +35,8 @@ const DashboardLayout: React.FC = () => {
   const auth: AuthTokens = {
     accessToken: authState.accessToken,
     refreshToken: authState.refreshToken,
-    user: authState.user, 
+    user: authState.user,
+ 
   };
 
   // const userId = auth.user.userId; 
@@ -107,7 +108,11 @@ const DashboardLayout: React.FC = () => {
   }, [accessToken, refreshToken, userId]);
 
 
-
+  const transformedUsers = users.map(user => ({
+  id: user.userId,        
+  fullname: user.fullName, 
+  username: user.username, 
+}));
 
   return (
     <Layout>
@@ -126,7 +131,7 @@ const DashboardLayout: React.FC = () => {
 
       {/* User Info Section */}
       {user && (
-      <UserInfoSection  date={DateConverter(user?.createdAt)} />
+      <UserInfoSection  date={DateConverter(user.createdAt || "")} />
        )}
 
       {/* Profile Stats */}
@@ -141,7 +146,7 @@ const DashboardLayout: React.FC = () => {
         <div className='w-1/3 hidden lg:flex '>
       {/* Who to Follow Section */}
         {user && (
-      <WhoToFollow users={users} followerId={userId} accessToken={accessToken} refreshToken={refreshToken} />
+      <WhoToFollow userss={transformedUsers} followerId={userId} accessToken={accessToken} refreshToken={refreshToken} />
         )}
         </div>
 

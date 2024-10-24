@@ -28,7 +28,7 @@ interface UserSectionProps {
 const UserSection: React.FC<UserSectionProps>  = ({data, followerId, accessToken, refreshToken}) => {
 
 
- const [followedUsers, setFollowedUsers] = useState<number[]>([]); 
+//  const [followedUsers, setFollowedUsers] = useState<number[]>([]); 
   const [loading, setLoading] = useState<number | null>(null); 
 
   // Function to handle the follow button click
@@ -37,7 +37,7 @@ const UserSection: React.FC<UserSectionProps>  = ({data, followerId, accessToken
     try {
       // Call the API to follow the user
       const response = await api.followUsers({ accessToken, refreshToken, followingId, followerId });
-      setFollowedUsers((prev) => [...prev, followingId]); 
+      // setFollowedUsers((prev) => [...prev, followingId]); 
       showToast(response.data.message, "success"); 
     } catch (error) {
       console.error('Error following user:', error);

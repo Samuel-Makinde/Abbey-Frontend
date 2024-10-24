@@ -1,5 +1,3 @@
-
-
 import React, {useState, useEffect} from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -126,7 +124,7 @@ const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
         navigate("/connect");
       }
     } catch (error) {
-      // Handle unexpected errors, such as network issues
+      console.log(error)
       showToast("An unexpected error occurred. Please try again.", "error");
     }
   };

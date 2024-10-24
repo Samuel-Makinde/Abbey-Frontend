@@ -7,8 +7,8 @@ export interface User {
   username: string;
   country: string;
   state: string;
-  bio: string;
-  createdAt: string
+  bio?: string ;
+  createdAt?: string
 }
 
 export interface AuthTokens {

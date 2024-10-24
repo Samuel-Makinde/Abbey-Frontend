@@ -67,6 +67,7 @@ const UserLogin: React.FC = () => {
       }
     } catch (error) {
       // Handle unexpected errors, such as network issues
+      console.log(error)
       showToast("An unexpected error occurred. Please try again.", "error");
     }
   };

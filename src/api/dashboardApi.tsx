@@ -1,5 +1,6 @@
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import AxiosInterceptor from "../component/AxioInterceptor";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/users`;
