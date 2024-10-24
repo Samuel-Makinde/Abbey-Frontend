@@ -1,13 +1,12 @@
 import { useNavigate,  } from 'react-router-dom';
-import { FaHome, FaUser, FaCog } from 'react-icons/fa'; // Example icons
+import { FaHome, FaUser } from 'react-icons/fa'; 
 
 const FooterLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: 'Home', icon: <FaHome />, route: '/home' },
-    { name: 'Explore', icon: <FaUser />, route: '/explore' },
-    { name: 'Profile', icon: <FaCog />, route: '/profile' },
+     { name: 'Connect', icon: <FaHome />, route: '/connect' },
+    { name: 'Profile', icon: <FaUser />, route: '/profile' },
   ];
 
   return (

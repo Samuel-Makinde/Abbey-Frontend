@@ -2,17 +2,17 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import LoginImage from "../../assets/react.svg";
+import LoginImage from "../../assets/login-image.png";
 import Logo from "../../assets/react.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { ButtonLongPurple } from "../../component/Button";
 import { LongInputWithPlaceholder } from "../../component/Inputs";
 import { Heading, Text } from "../../component/Texts";
 import { Label } from "../../component/Label";
-// import { useDispatch, useSelector } from "react-redux";
-// import { creatorLogin } from "../../../features/authentication";
-// import { showToast } from "../../component/ShowToast";
-// import { RootState, AppDispatch } from ".";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogin } from "../../feature/authentication";
+import { showToast } from "../../component/showToast";
+import { RootState, AppDispatch } from "../../store";
 
 // Define form inputs interface
 interface LoginFormInputs {
@@ -33,9 +33,9 @@ const schema = yup.object().shape({
 });
 
 const UserLogin: React.FC = () => {
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch<AppDispatch>(); 
-//   const { isLoading, error, user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>(); 
+  const { isLoading,  } = useSelector((state: RootState) => state.auth);
 
   // Set up the form with react-hook-form
   const {
@@ -46,30 +46,30 @@ const UserLogin: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-//   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-//     try {
-//       // Dispatch the login action
-//       const resultAction = await dispatch(
-//         creatorLogin({
-//           email: data.email,
-//           password: data.password,
-//         })
-//       );
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    try {
+      // Dispatch the login action
+      const resultAction = await dispatch(
+        userLogin({
+          email: data.email,
+          password: data.password,
+        })
+      );
 
-//       if (creatorLogin.rejected.match(resultAction)) {
-//         // Login failed, access the payload from the rejected action
-//         const errorPayload = resultAction.payload as string;
-//         showToast(errorPayload, "error");
-//       } else if (creatorLogin.fulfilled.match(resultAction)) {
-//         // Login was successful
-//         showToast(resultAction.payload.message, "success");
-//         navigate("/creator/dashboard/overview");
-//       }
-//     } catch (error) {
-//       // Handle unexpected errors, such as network issues
-//       showToast("An unexpected error occurred. Please try again.", "error");
-//     }
-//   };
+      if (userLogin.rejected.match(resultAction)) {
+        // Login failed, access the payload from the rejected action
+        const errorPayload = resultAction.payload as string;
+        showToast(errorPayload, "error");
+      } else if (userLogin.fulfilled.match(resultAction)) {
+        // Login was successful
+        showToast(resultAction.payload.message, "success");
+        navigate("/connect");
+      }
+    } catch (error) {
+      // Handle unexpected errors, such as network issues
+      showToast("An unexpected error occurred. Please try again.", "error");
+    }
+  };
 
 
 
@@ -99,7 +99,7 @@ const UserLogin: React.FC = () => {
             </Text>
 
             <form className="mt-12" 
-            // onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
             >
               {/* Email Field */}
               <div className="mb-4">
@@ -150,19 +150,19 @@ const UserLogin: React.FC = () => {
                 </Link>
               </Text>
 
-              {/* {isLoading ? ( */}
-                {/* <ButtonLongPurple
+               {isLoading ? ( 
+                 <ButtonLongPurple
                   className="w-full opacity-50"
                   type="submit"
                   disabled
                 >
                   Logging In...
                 </ButtonLongPurple>
-              ) : ( */}
+              ) : ( 
                 <ButtonLongPurple className="w-full" type="submit">
                   Login
                 </ButtonLongPurple>
-              {/* )} */}
+               )} 
             </form>
           </div>
         </div>

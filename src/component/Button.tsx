@@ -66,7 +66,7 @@ export const ButtonSmallWhite: React.FC<ButtonProps> = ({
   children,
   disabled = false,
   className = "",
-  width = "w-[202px]",
+  width = "",
   padding = "4",
 }) => {
   return (

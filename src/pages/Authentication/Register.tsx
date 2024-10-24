@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import LoginImage from "../../assets/react.svg";
+import LoginImage from "../../assets/login-image.png";
 import Logo from "../../assets/react.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { ButtonLongPurple } from "../../component/Button";
@@ -12,6 +12,10 @@ import { LongInputWithPlaceholder } from "../../component/Inputs";
 import { Heading, Text } from "../../component/Texts";
 import { Country, State } from "country-state-city";
 import { LabelImportant } from "../../component/Label";
+import { useDispatch, useSelector } from 'react-redux'; 
+import { showToast } from "../../component/showToast";
+import { userRegister } from "../../feature/authentication";
+import { RootState, AppDispatch } from "../../store";
 
 // Define form inputs interface
 interface RegisterFormInputs {
@@ -42,9 +46,9 @@ const schema = yup.object().shape({
 });
 
 const UserRegister: React.FC = () => {
-//   const navigate = useNavigate();
-
-  // Set up the form with react-hook-form
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>(); 
+  const { isLoading,  } = useSelector((state: RootState) => state.auth);
   const {
     register,
     handleSubmit,
@@ -59,21 +63,20 @@ const UserRegister: React.FC = () => {
   const [states, setStates] = useState<ReturnType<typeof State.getStatesOfCountry>>([]);
 
 
- const selectedCountry = watch("country"); // Watch the country value
-  const selectedState = watch("state"); // Watch the state value
+ const selectedCountry = watch("country"); 
+  const selectedState = watch("state");
 
   useEffect(() => {
     const countriesList = Country.getAllCountries();
     setCountries(countriesList);
 
-    // If country is not set, use default country (Nigeria)
     if (!selectedCountry) {
       setValue("country", "NG");
+
     } else {
       setValue("country", selectedCountry);
     }
 
-    // Set states based on selected country
     const defaultCountryStates = State.getStatesOfCountry(selectedCountry || "NG");
     setStates(defaultCountryStates);
 
@@ -83,17 +86,49 @@ const UserRegister: React.FC = () => {
    const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const countryCode = event.target.value;
     setValue("country", countryCode);
+    console.log("country", countryCode)
     
-    // Fetch states based on selected country
     const selectedStates = State.getStatesOfCountry(countryCode);
     setStates(selectedStates);
-    setValue("state", ""); // Reset state value when country changes
+    setValue("state", ""); 
   };
 
-  const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
-    // Handle registration logic here
-    console.log(data); // For demonstration; replace with actual registration logic
-    // navigate("/next-step"); // Redirect after successful registration
+
+
+const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const stateName = event.target.value;
+  console.log("state", stateName)
+  setValue("state", stateName); 
+};
+
+const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
+    try {
+      // Dispatch the login action
+      const resultAction = await dispatch(
+        userRegister({
+          fullname: data.fullName,
+          email: data.email,
+          password: data.password,
+          username: data.userName,
+          bio: data.bio,
+          country: data.country,
+          state: data.state,
+        })
+      );
+
+      if (userRegister.rejected.match(resultAction)) {
+        // Login failed, access the payload from the rejected action
+        const errorPayload = resultAction.payload as string;
+        showToast(errorPayload, "error");
+      } else if (userRegister.fulfilled.match(resultAction)) {
+        // Login was successful
+        showToast(resultAction.payload.message, "success");
+        navigate("/connect");
+      }
+    } catch (error) {
+      // Handle unexpected errors, such as network issues
+      showToast("An unexpected error occurred. Please try again.", "error");
+    }
   };
 
   return (
@@ -222,9 +257,10 @@ const UserRegister: React.FC = () => {
         {...register("state")}
         className="mt-2 w-full border outline-none rounded p-2"
         value={selectedState}
+         onChange={handleStateChange}
       >
         {states.map(state => (
-          <option key={state.isoCode} value={state.isoCode}>
+          <option key={state.isoCode} value={state.name}>
             {state.name}
           </option>
         ))}
@@ -285,9 +321,19 @@ const UserRegister: React.FC = () => {
                 </Link>
               </Text>
 
-              <ButtonLongPurple className="w-full" type="submit">
-                Sign Up
-              </ButtonLongPurple>
+               {isLoading ? ( 
+                 <ButtonLongPurple
+                  className="w-full opacity-50"
+                  type="submit"
+                  disabled
+                >
+                  Processing...
+                </ButtonLongPurple>
+              ) : ( 
+                <ButtonLongPurple className="w-full" type="submit">
+                  Sign up
+                </ButtonLongPurple>
+               )} 
             </form>
           </div>
         </div>
